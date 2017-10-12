@@ -35,7 +35,7 @@ namespace vsrpp_4_1
                 //wordapp = null;
 
                 Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.Application();
-                Document doc = app.Documents.Open("testword.docx");
+                Document doc = app.Document.Open("testword.docx");
                 object missing = System.Reflection.Missing.Value;
                 //string s = "Hi";
                 //Console.WriteLine(s);               
