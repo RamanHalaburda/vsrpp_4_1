@@ -23,27 +23,9 @@ namespace vsrpp_4_1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != String.Empty || textBox2.Text != String.Empty || textBox3.Text != String.Empty)
+            if (textBox1.Text != String.Empty && textBox2.Text != String.Empty && textBox3.Text != String.Empty)
             {
-                //wordapp = new Microsoft.Office.Interop.Word.Application();
-                //wordapp.Visible = true;
-
-                //Object saveChanges = Microsoft.Office.Interop.Word.WdSaveOptions.wdPromptToSaveChanges;
-                //Object originalFormat = Microsoft.Office.Interop.Word.WdOriginalFormat.wdWordDocument;
-                //Object routeDocument = Type.Missing;
-                //wordapp.Quit(ref saveChanges, ref originalFormat, ref routeDocument);
-                //wordapp = null;
-
-                Microsoft.Office.Interop.Word.Application app = new Microsoft.Office.Interop.Word.Application();
-                Document doc = app.Document.Open("testword.docx");
-                object missing = System.Reflection.Missing.Value;
-                //string s = "Hi";
-                //Console.WriteLine(s);               
-                doc.Content.Text = GenereteText(textBox1.Text, textBox2.Text, textBox3.Text);
-                doc.Save();
-                doc.Close(ref missing);
-
-                app.Quit(ref missing);
+                CreateDocument();
             }
             else
             {
@@ -51,6 +33,35 @@ namespace vsrpp_4_1
             }
         }
 
+        private void CreateDocument()
+        {
+            try
+            {
+                Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
+                winword.ShowAnimation = false;
+                winword.Visible = false;
+                object missing = System.Reflection.Missing.Value;
+                Microsoft.Office.Interop.Word.Document document = winword.Documents.Add(ref missing, ref missing, ref missing, ref missing);
+
+                document.Content.Text = GenereteText(textBox1.Text, textBox2.Text, textBox3.Text);
+                
+                object currentFileName = @"e:\study\1_Study\BarsuEngineeringFaculty\ProjMVS2017\vsrpp_4_1\vsrpp_4_1\docx\"
+                    + "(" + textBox1.Text + ") to (" + textBox1.Text + ").docx";
+
+                document.SaveAs2(ref currentFileName);
+                document.Close(ref missing, ref missing, ref missing);
+                document = null;
+                winword.Quit(ref missing, ref missing, ref missing);
+                winword = null;
+                MessageBox.Show("Document created successfully !");
+
+                ClearFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
         private string GenereteText(string _receiver, string _email, string _sender)
         {
             return "\t"
@@ -71,6 +82,11 @@ namespace vsrpp_4_1
                 + System.Environment.NewLine
                 + "\t"
                 + _sender;
+        }
+
+        public void ClearFields()
+        {
+            textBox1.Text = textBox2.Text = textBox3.Text = String.Empty;
         }
     }
 }
